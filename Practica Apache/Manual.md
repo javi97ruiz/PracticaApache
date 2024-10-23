@@ -41,7 +41,7 @@ Una vez tengamos los directorios scripts, sites-available y websites creados vac
 
 Dentro de la carpeta script crearemos un archivo que en mi caso he llamado 'apachejavi-init.sh' y añadiremos el siguiente contenido.
 
-`![Script para javi_web](./Imgs/ScriptJaviWeb.png)`
+![Script para javi_web](Imgs/ScriptJaviWeb.png)
 
 ```bash
 #!/bin/bash
@@ -60,7 +60,7 @@ apache2ctl -D FOREGROUND
 
 Una vez tengamos el script realizado pasaremos a nuestro archivo .conf, en este caso lo he llamado javi.conf acorde al nombre del dominio, debe quedar de la siguiente manera:
 
-`![conf para javi_web](./Imgs/JaviConf.png)`
+![conf para javi_web](./Imgs/JaviConf.png)
 
 <VirtualHost *:80>
     DocumentRoot /var/www/html
@@ -74,7 +74,7 @@ Ya con todo preparado para la creacion de la pagina web en apache unicamente nos
 
 Empezaremos creando un contenedor para esta pagina especifica pero lo iremos modificando segun vayamos creando el resto de paginas.
 
-`![docker-compose javi_web](./Imgs/DockerComposeJaviWeb.png)`
+![docker-compose javi_web](./Imgs/DockerComposeJaviWeb.png)
 
 El docker-compose debe tener el siguiente formato:
 
@@ -116,7 +116,7 @@ Lo primero sera darle forma a los directorios, basandonos en el dominio anterior
 
 En los archivos .conf, y script unicamente modificaremos todos los nombres del dominio anterior al nuevo dominio para que quede de la siguiente manera:
 
-`![Script para ruiz_web](./Imgs/ScriptRuizWeb.png)`
+![Script para ruiz_web](./Imgs/ScriptRuizWeb.png)
 
 ```bash
 #!/bin/bash
@@ -142,7 +142,7 @@ apache2ctl -D FOREGROUND
 
 Deberemos modificar el docker-compose para añadir este nuevo dominio, volveremos a realizar un duplicado de javi_website cambiando la especificacion del dominio anterior para este nuevo dominio, debe quedar de la siguiente manera:
 
-`![docker-compose ruiz_web](./Imgs/DockerComposeRuizWeb.png)`
+![docker-compose ruiz_web](./Imgs/DockerComposeRuizWeb.png)
 
 ```yaml
 ruiz_web:
@@ -188,7 +188,7 @@ La nueva estructura debe quedar de la siguiente manera:
 Una vez tenemos esta estructura empezamos las modificaciones y los nuevos añadidos.
 
 Deberemos modificar el archivo .conf de la siguiente manera:
-`![conf para javiruiz_web](./Imgs/JaviRuizConf.png)`
+![conf para javiruiz_web](./Imgs/JaviRuizConf.png)
 
 <VirtualHost *:80>
     serverName `www.javiruizseguro.net`
@@ -222,7 +222,7 @@ Deberemos modificar el archivo .conf de la siguiente manera:
 En este .conf lo que hemos añadido es el redirect en el puerto 80 para que la pagina nos redireccione automaticamente cuando accedamos a ella y añadir todo lo nuevo para el puerto 443 que sera el que nos lleve a la proteccion de certificados.
 
 Una vez tengamos el .conf pasamos al script:
-`![Script para javiruiz_web](./Imgs/ScriptJaviRuizWeb.png)`
+![Script para javiruiz_web](./Imgs/ScriptJaviRuizWeb.png)
 
 ```bash
 #!/bin/bash
@@ -246,10 +246,10 @@ Aqui añadiremos la linea de a2enmod para habilitar la proteccion de ssl.
 Los directorios certs y htpasswd los crearemos a mano, el directorio certs lo dejaremos vacio ya que le daremos uso en un paso posterior pero en el htpasswd crearemos un archivo con nombre .htpasswd para que sea un archivo oculto, en este archivo incluiremos la siguiente linea "usuario:bcrypt" donde, usuario sera el nombre de usuario con el que nos queramos loguear y bcrypt sera un string generado, por ejemplo, con bcrypt generator que nos lo generara online y sin coste.
 
 Debe quedarnos una linea con el siguiente formato:
-`![htpasswd](./Imgs/htpasswd.png)`
+![htpasswd](./Imgs/htpasswd.png)
 
 Una vez tenemos los archivos modificados y los directorios creados pasaremos al docker-compose, el cual añadiremos las siguientes lineas:
-`![docker-compose javiruiz_web](./Imgs/DockerComposeJaviRuizWeb.png)`
+![docker-compose javiruiz_web](./Imgs/DockerComposeJaviRuizWeb.png)
 
 ```yaml
 javiruiz_web:
@@ -271,7 +271,9 @@ javiruiz_web:
 Las nuevas lineas que hemos añadido sera para copiar los nuevos directorios al docker.
 
 Ahora con todo preparado solo nos quedara abrir la consola de OpenSSL que hemos instalado anteriormente, dirigirnos al directorio certs de nuestro proyecto y una vez que nos hayamos posicionado en el directorio incluiremos el siguiente comando:
-`![comando openssl](./Imgs/OpenSSLCommand.png)`
+
+![comando openssl](./Imgs/OpenSSLCommand.png)
+
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout (introduce el nombre del dominio sin extension).key -out (introduce el nombre del dominio sin extension).crt
 
 Este comando nos creara el archivo .key y el archivo .crt despues de hacernos unas preguntas para la informacion del certificado, el campo mas importante es el ultimo que nos preguntaran que es el email al que habria que dirigirse en caso de tener un problema con el ssl, que seria el email del admin del dominio en nuestro caso podremos poner cualquier string ya que es un dummy.
