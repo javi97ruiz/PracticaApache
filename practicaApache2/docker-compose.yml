@@ -1,0 +1,42 @@
+services:
+  javi_web:
+    image: ubuntu/apache2 # imagen de Apache
+    container_name: apacheJavi_server # nombre del contenedor
+    ports:
+      - "80:80" # mapeo de puertos
+    volumes:
+      - ./javi_website/websites:/var/www/html/ # directorio de los sitios web
+      - ./javi_website/sites-available:/etc/apache2/sites-available      
+      - ./javi_website/scripts:/scripts
+    restart: always # reinicio automático
+    entrypoint: /scripts/apachejavi-init.sh # comando para activar los hosts virtuales y arrancar Apache
+    
+
+  ruiz_web:
+    image: ubuntu/apache2 # imagen de Apache
+    container_name: apacheRuiz_server # nombre del contenedor
+    ports:
+      - "8080:80" # mapeo de puertos
+    volumes:
+      - ./ruiz_website/websites:/var/www/html/ # directorio de los sitios web
+      - ./ruiz_website/sites-available:/etc/apache2/sites-available      
+      - ./ruiz_website/scripts:/scripts
+    restart: always # reinicio automático
+    entrypoint: /scripts/apacheruiz-init.sh
+    # comando para activar los hosts virtuales y arrancar Apache
+    
+  javiruiz_web:
+    image: ubuntu/apache2 # imagen de Apache
+    container_name: apacheJaviRuiz_server # nombre del contenedor
+    ports:
+      - "6969:80" # mapeo de puertos
+      - "443:443"
+    volumes:
+      - ./javiruiz_website/websites:/var/www/html/ # directorio de los sitios web
+      - ./javiruiz_website/sites-available:/etc/apache2/sites-available      
+      - ./javiruiz_website/scripts:/scripts
+      - ./javiruiz_website/htpasswd/.htpasswd:/etc/apache2/.htpasswd # archivo de contraseñas
+      - ./javiruiz_website/certs:/etc/apache2/certs # directorio de certificados (hechos con openssl)
+    restart: always # reinicio automático
+    entrypoint: /scripts/apachejaviruiz-init.sh
+    # comando para activar los hosts virtuales y arrancar Apache
